@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:07 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/17 08:57:21 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/17 12:00:47 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,19 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (arr);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char **s1, char **s2)
 {
 	char	*res;
 	int		len1;
 	int		len2;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
+	len1 = ft_strlen(*s1);
+	len2 = ft_strlen(*s2);
 	res = malloc((sizeof(char) * (len1 + len2)) + 1);
 	if (!res)
 		return (NULL);
-	ft_memcpy(res, s1, len1);
-	ft_memcpy(res + len1, s2, len2);
+	ft_memcpy(res, *s1, len1);
+	ft_memcpy(res + len1, *s2, len2);
 	res[len1 + len2] = '\0';
 	return (res);
 }
@@ -80,6 +80,7 @@ size_t	ft_strlen(const char *s)
 		i++;
 	return (i);
 }
+
 char	*ft_strdup(const char *s)
 {
 	char	*arr;

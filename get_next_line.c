@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:05 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/16 14:14:11 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/17 11:57:33 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 
 char	*extract(char *str)
 {
-	char *to_return;
-	size_t i;
+	char	*to_return;
+	size_t	i;
 
 	i = 0;
-	while(str[i] && str[i] != '\n')
+	while (str[i] && str[i] != '\n')
 		++i;
 	if (str[i] == '\n')
 		to_return = calloc(i + 2, sizeof(char));
-	else 
+	else
 		to_return = calloc(i + 1, sizeof(char));
 	if (!to_return)
 		return (NULL);
@@ -39,15 +39,15 @@ char	*extract(char *str)
 	return (to_return);
 }
 
-char *join(char *str1, char *str2)
+char	*join(char *str1, char *str2)
 {
-	char *res;
-	
-	if(!str1)
+	char	*res;
+
+	if (!str1)
 		str1 = ft_strdup("");
 	if (!str1 || !str2)
 		return (NULL);
-	res = ft_strjoin(str1, str2);
+	res = ft_strjoin(&str1, &str2);
 	free(str1);
 	return (res);
 }
@@ -67,46 +67,38 @@ char	*checker(char *buffer, char **rest, int fd)
 		buffer[i] = '\0';
 		printf("To join rest: \"%s\" and buffer: \"%s\"\n", *rest, buffer);
 		joiner = join(joiner, buffer);
-		free(*rest);
-		*rest = ft_strdup(joiner);
 		printf("After join: \"%s\"\n", joiner);
 		printf("i = %d\n", i);
 		printf("Rest = \"%s\"\n\n", *rest);
 	}
-	if(i < 0)
+	if (i < 0)
 		return (free(joiner), NULL);
 	if (ft_strchr(joiner, '\n') && i > 0)
 	{
 		result = extract(joiner);
 		printf("Line with '\\n' sign: \"%s\"\n", result);
-		//free(*rest);
 		*rest = ft_strdup(ft_strchr(joiner, '\n') + 1);
 		printf("Everything after '\\n': \"%s\"\n", *rest);
-		free (joiner);
-		return (result);
+		return (free (joiner), result);
 	}
-	else if(!ft_strchr(joiner, '\n') && i == 0 && joiner && *joiner)
+	else if (!ft_strchr(joiner, '\n') && i == 0 && joiner && *joiner)
 	{
 		result = ft_strdup(*rest);
-		free (joiner);
-		*rest = NULL;
-		return (result);			
+		return (free (joiner), free (*rest), *rest = NULL, result);
 	}
-	free(joiner);
-	*rest = NULL;
-	return (NULL);
+	return (free (joiner), *rest = NULL, NULL);
 }
 
 char	*get_next_line(int fd)
 {
-	static char *rest;
-	char *buffer;
-	char *res;
-	
+	static char	*rest;
+	char		*buffer;
+	char		*res;
+
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	buffer = ft_calloc(BUFFER_SIZE+1, sizeof(char));
-	if(!buffer)
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buffer)
 		return (NULL);
 	res = checker(buffer, &rest, fd);
 	free (buffer);
