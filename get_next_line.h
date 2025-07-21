@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:00 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/17 12:00:10 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/21 10:50:34 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,8 @@
 # endif
 
 char	*get_next_line(int fd);
-char	*ft_strjoin(char **s1, char **s2);
+char	*ft_strjoin(char *s1, char *s2);
 void	*ft_calloc(size_t nmemb, size_t size);
-size_t	ft_strlen(const char *s);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);

@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:07 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/17 12:00:47 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/21 10:50:57 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,21 +35,27 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (arr);
 }
 
-char	*ft_strjoin(char **s1, char **s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
-	char	*res;
-	int		len1;
-	int		len2;
+	char		*res;
+	size_t		len1;
+	size_t		len2;
 
-	len1 = ft_strlen(*s1);
-	len2 = ft_strlen(*s2);
-	res = malloc((sizeof(char) * (len1 + len2)) + 1);
+	len1 = 0;
+	if (s1[0] == '\0')
+		len1 = 0;
+	while (s1[len1] != '\0')
+		++len1;
+	len2 = 0;
+	if (s2[0] == '\0')
+		len2 = 0;
+	while (s2[len2] != '\0')
+		++len2;
+	res = ft_calloc((len1 + len2) + 1, sizeof(char));
 	if (!res)
 		return (NULL);
-	ft_memcpy(res, *s1, len1);
-	ft_memcpy(res + len1, *s2, len2);
-	res[len1 + len2] = '\0';
-	return (res);
+	ft_memcpy(res, s1, len1);
+	return (ft_memcpy(res + len1, s2, len2), res[len1 + len2] = '\0', res);
 }
 
 void	*ft_memcpy(void *dest, const void *src, size_t n)
@@ -69,27 +75,22 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-size_t	ft_strlen(const char *s)
-{
-	int	i;
-
-	i = 0;
-	if (s[0] == '\0')
-		return (0);
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
 char	*ft_strdup(const char *s)
 {
 	char	*arr;
 	int		i;
 
 	i = 0;
+	if (!s)
+	{
+		arr = ft_calloc(1, sizeof(char));
+		if (!arr)
+			return (NULL);
+		return (arr[0] = '\0', arr);
+	}
 	while (s[i] != '\0')
 		i++;
-	arr = malloc((i * sizeof(char)) + 1);
+	arr = ft_calloc(i + 1, sizeof(char));
 	if (!arr)
 		return (NULL);
 	i = 0;
@@ -104,6 +105,8 @@ char	*ft_strdup(const char *s)
 
 char	*ft_strchr(const char *s, int c)
 {
+	if (!s)
+		return (NULL);
 	while (*s)
 	{
 		if ((unsigned char)*s == (unsigned char)c)

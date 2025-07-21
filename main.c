@@ -6,7 +6,7 @@ int main()
 {
 	char *line;
 	int count = 0;
-	int fd = open("text.txt", O_RDONLY);
+	int fd = open("text.txt", O_RDWR);
 
 	while ((line = get_next_line(fd)) != NULL)
 	{
@@ -14,7 +14,6 @@ int main()
 		free(line);
 		++count;
 	}
-	
 	close(fd);
 	return 0;
 }
