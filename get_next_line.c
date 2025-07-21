@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:05 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/21 10:43:18 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/21 18:00:01 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,48 @@ char	*join(char **str1, char *str2)
 {
 	char	*res;
 
+	if (!str2)
+		return (NULL);
 	if (!*str1)
 	{
 		*str1 = ft_strdup("");
 		if (!*str1)
-			return (NULL);	
+			return (NULL);
 	}
-	if (!*str1 || !str2)
-		return (NULL);
 	res = ft_strjoin(*str1, str2);
-	if(!res)
-		return(free (*str1), res = NULL, NULL);
+	if (!res)
+		return (free (*str1), res = NULL, NULL);
 	free(*str1);
 	*str1 = NULL;
 	return (res);
+}
+
+char	*if_checker(char **rest, char **joiner, int *i)
+{
+	char	*res;
+
+	if (ft_strchr(*joiner, '\n') && *i > 0)
+	{
+		res = extract(*joiner);
+		if (*rest)
+			free (*rest);
+		*rest = ft_strdup(ft_strchr(*joiner, '\n') + 1);
+		return (free (*joiner), res);
+	}
+	else if (!ft_strchr(*joiner, '\n') && (*joiner)[0])
+	{
+		if (!*rest || (*rest)[0] == '\0')
+		{
+			res = ft_strdup(*joiner);
+			if (*rest)
+				free (*rest);
+			return (free(*joiner), *rest = NULL, res);
+		}
+		res = ft_strdup(*rest);
+		free (*rest);
+		return (free (*joiner), *rest = NULL, res);
+	}
+	return (free (*joiner), free (*rest), *rest = NULL, NULL);
 }
 
 char	*checker(char *buffer, char **rest, int fd)
@@ -65,49 +93,26 @@ char	*checker(char *buffer, char **rest, int fd)
 	int		i;
 
 	if (*rest && (*rest)[0] != '\0')
-	{
 		joiner = ft_strdup(*rest);
-		if (!joiner)
-			return (free (*rest), NULL);
-	}
 	else
-	{
 		joiner = ft_strdup("");
-		if (!joiner)
+	if (!joiner)
+	{
+		if (*rest && (*rest)[0] != '\0')
+			return (free(*rest), NULL);
+		else
 			return (NULL);
 	}
-	i = 0;
-	while (!ft_strchr(joiner, '\n') && (i = read(fd, buffer, BUFFER_SIZE)) > 0)
+	i = 1;
+	while (!ft_strchr(joiner, '\n') && i > 0)
 	{
+		i = read(fd, buffer, BUFFER_SIZE);
+		if (i < 0)
+			return (free(joiner), NULL);
 		buffer[i] = '\0';
 		joiner = join(&joiner, buffer);
 	}
-	if (i < 0)
-		return (free(joiner), NULL);
-	if (ft_strchr(joiner, '\n') && i > 0)
-	{
-		result = extract(joiner);
-		if (*rest)
-			free(*rest);
-		*rest = ft_strdup(ft_strchr(joiner, '\n') + 1);
-		return (free (joiner), result);
-	}
-	else if (!ft_strchr(joiner, '\n') && *joiner)
-	{
-		if(!*rest || (*rest)[0] == '\0')
-		{
-			result = ft_strdup(joiner);
-			if (*rest)
-				free (*rest);
-		}
-		else
-		{
-			result = ft_strdup(*rest);
-			free (*rest);
-		}
-		return (free (joiner), *rest = NULL, result);
-	}
-	return (free (joiner), free (*rest), *rest = NULL, NULL);
+	return (result = if_checker(rest, &joiner, &i), result);
 }
 
 char	*get_next_line(int fd)
