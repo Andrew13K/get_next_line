@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:05 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/21 18:00:01 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/22 13:08:48 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,11 @@ char	*if_checker(char **rest, char **joiner, int *i)
 			return (free(*joiner), *rest = NULL, res);
 		}
 		res = ft_strdup(*rest);
-		free (*rest);
-		return (free (*joiner), *rest = NULL, res);
+		return (free (*rest), free (*joiner), *rest = NULL, res);
 	}
-	return (free (*joiner), free (*rest), *rest = NULL, NULL);
+	free (*joiner);
+	free (*rest); // if (rest)
+	return (*rest = NULL, NULL);
 }
 
 char	*checker(char *buffer, char **rest, int fd)
@@ -111,6 +112,8 @@ char	*checker(char *buffer, char **rest, int fd)
 			return (free(joiner), NULL);
 		buffer[i] = '\0';
 		joiner = join(&joiner, buffer);
+		if (!joiner)
+			return (NULL);
 	}
 	return (result = if_checker(rest, &joiner, &i), result);
 }

@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:07 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/21 17:39:39 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/22 13:07:33 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,14 @@ char	*ft_strjoin(char *s1, char *s2)
 	size_t		len2;
 
 	len1 = 0;
-	if (s1[0] == '\0')
-		len1 = 0;
+	if (!s1 || !s2)
+		return (NULL);
 	while (s1[len1] != '\0')
 		++len1;
 	len2 = 0;
-	if (s2[0] == '\0')
-		len2 = 0;
 	while (s2[len2] != '\0')
 		++len2;
-	res = ft_calloc((len1 + len2) + 1, sizeof(char));
+	res = ft_calloc(len1 + len2 + 1, sizeof(char));
 	if (!res)
 		return (NULL);
 	ft_memcpy(res, s1, len1);
