@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:05 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/22 13:08:48 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:28:58 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,39 +83,37 @@ char	*if_checker(char **rest, char **joiner, int *i)
 		return (free (*rest), free (*joiner), *rest = NULL, res);
 	}
 	free (*joiner);
-	free (*rest); // if (rest)
+	free (*rest);
 	return (*rest = NULL, NULL);
 }
 
 char	*checker(char *buffer, char **rest, int fd)
 {
-	char	*result;
-	char	*joiner;
-	int		i;
+	t_checker	chk;
 
 	if (*rest && (*rest)[0] != '\0')
-		joiner = ft_strdup(*rest);
+		chk.joiner = ft_strdup(*rest);
 	else
-		joiner = ft_strdup("");
-	if (!joiner)
+		chk.joiner = ft_strdup("");
+	if (!chk.joiner)
 	{
 		if (*rest && (*rest)[0] != '\0')
 			return (free(*rest), NULL);
 		else
 			return (NULL);
 	}
-	i = 1;
-	while (!ft_strchr(joiner, '\n') && i > 0)
+	chk.i = 1;
+	while (!ft_strchr(chk.joiner, '\n') && chk.i > 0)
 	{
-		i = read(fd, buffer, BUFFER_SIZE);
-		if (i < 0)
-			return (free(joiner), NULL);
-		buffer[i] = '\0';
-		joiner = join(&joiner, buffer);
-		if (!joiner)
+		chk.i = read(fd, buffer, BUFFER_SIZE);
+		if (chk.i < 0)
+			return (free(chk.joiner), NULL);
+		buffer[chk.i] = '\0';
+		chk.joiner = join(&chk.joiner, buffer);
+		if (!chk.joiner)
 			return (NULL);
 	}
-	return (result = if_checker(rest, &joiner, &i), result);
+	return (chk.result = if_checker(rest, &chk.joiner, &chk.i), chk.result);
 }
 
 char	*get_next_line(int fd)

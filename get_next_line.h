@@ -6,7 +6,7 @@
 /*   By: akosmeni <akosmeni@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/11 13:09:00 by akosmeni          #+#    #+#             */
-/*   Updated: 2025/07/22 12:50:37 by akosmeni         ###   ########.fr       */
+/*   Updated: 2025/07/22 16:59:01 by akosmeni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,15 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1
+#  define BUFFER_SIZE 1
 # endif
+
+typedef struct checker_vars
+{
+	char	*result;
+	char	*joiner;
+	int		i;
+}	t_checker;
 
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char *s2);
